@@ -1,22 +1,22 @@
 <?php declare(strict_types=1);
 
 if (php_sapi_name() !== 'cli') {
-    die('Command must be executed via CLI');
+    nlDie('Command must be executed via CLI');
 }
 
-run();
-die('FINISHED');
+run($argv);
+nlDie('FINISHED');
 
 // ---------------------------------------------------------------------------------------------------------------------
-function run(): void
+function run($argv): void
 {
     if (empty($argv[1])) {
-        die('Missing first argument with path to directory');
+        nlDie('Missing first argument with path to directory');
     }
 
     $path = realpath($argv[1]);
     if (! file_exists($path)) {
-        die('Path `' . $argv[1] . '` does not exist');
+        nlDie('Path `' . $argv[1] . '` does not exist');
     }
 
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path)) as $file) {
@@ -67,4 +67,10 @@ function modifyFile(string $path): void
     $modified = implode(PHP_EOL, $lines);
 
     file_put_contents($path, $modified);
+}
+
+
+function nlDie(string $message): void
+{
+    die($message . PHP_EOL . PHP_EOL);
 }
