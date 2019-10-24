@@ -32,39 +32,39 @@ function run(): void
  */
 function modifyFile(string $path): void
 {
-	$original = file_get_contents($path);
-	$lines = explode(PHP_EOL, $original);
+    $original = file_get_contents($path);
+    $lines = explode(PHP_EOL, $original);
 
-	// modify
-	foreach ($lines as $i => &$line) {
-		if ($i === 0) {
-			$line = '<?php declare(strict_types=1);';
-			continue;
-		}
+    // modify
+    foreach ($lines as $i => &$line) {
+        if ($i === 0) {
+            $line = '<?php declare(strict_types=1);';
+            continue;
+        }
 
         $line = str_replace('declare(strict_types=1);', '', $line);
         $line = rtrim($line);
-	}
+    }
     unset($line);
 
     // clean double empty lines
-	$cleaning = false;
-	$lines = array_filter($lines, static function ($line) use (&$cleaning) {
-		if ($line !== '') {
-			$cleaning = false;
-			return true;
-		}
+    $cleaning = false;
+    $lines = array_filter($lines, static function ($line) use (&$cleaning) {
+        if ($line !== '') {
+            $cleaning = false;
+            return true;
+        }
 
-		if ($cleaning) {
-			return false;
-		}
+        if ($cleaning) {
+            return false;
+        }
 
-		$cleaning = true;
+        $cleaning = true;
 
-		return true;
-	});
+        return true;
+    });
 
-	$modified = implode(PHP_EOL, $lines);
+    $modified = implode(PHP_EOL, $lines);
 
-	file_put_contents($path, $modified);
+    file_put_contents($path, $modified);
 }
